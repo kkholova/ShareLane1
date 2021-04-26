@@ -1,7 +1,10 @@
+package ShareLane;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.util.concurrent.TimeUnit;
@@ -10,12 +13,15 @@ import static org.testng.Assert.assertTrue;
 
 public class SignUpTest {
 
+
+
     @Test
     public void zipCodeShouldBe5Digits() {
 //        установка переменной среды стр 14
         System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
         WebDriver driver = new ChromeDriver();
 //          Open the page      https://sharelane.com/cgi-bin/register.py
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         driver.get("https://sharelane.com/cgi-bin/register.py");
 //          Insert any 5 digits (11111)
         driver.findElement(By.name("zip_code")).sendKeys("11111");
@@ -33,6 +39,7 @@ public class SignUpTest {
     public void zipCodeShouldNotBe6Digits() {
         System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
         WebDriver driver = new ChromeDriver();
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         driver.get("https://sharelane.com/cgi-bin/register.py");
         driver.findElement(By.name("zip_code")).sendKeys("111111");
         driver.findElement(By.cssSelector("[value = Continue]")).click();
@@ -47,6 +54,7 @@ public class SignUpTest {
     public void zipCodeShouldNotBe4Digits() {
         System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
         WebDriver driver = new ChromeDriver();
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         driver.get("https://sharelane.com/cgi-bin/register.py");
         driver.findElement(By.name("zip_code")).sendKeys("1111");
         driver.findElement(By.cssSelector("[value = Continue]")).click();
@@ -61,6 +69,7 @@ public class SignUpTest {
     public void successfulSignUp() {
         System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
         WebDriver driver = new ChromeDriver();
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         driver.get("https://sharelane.com/cgi-bin/register.py");
         driver.findElement(By.name("zip_code")).sendKeys("11111");
         driver.findElement(By.cssSelector("[value = Continue]")).click();
@@ -79,6 +88,7 @@ public class SignUpTest {
     public void signUpFailureWithEmptyFirstName() {
         System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
         WebDriver driver = new ChromeDriver();
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         driver.get("https://sharelane.com/cgi-bin/register.py");
         driver.findElement(By.name("zip_code")).sendKeys("11111");
         driver.findElement(By.cssSelector("[value = Continue]")).click();
@@ -99,6 +109,7 @@ public class SignUpTest {
     public void signUpFailureWithEmptyEmail() {
         System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
         WebDriver driver = new ChromeDriver();
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         driver.get("https://sharelane.com/cgi-bin/register.py");
         driver.findElement(By.name("zip_code")).sendKeys("11111");
         driver.findElement(By.cssSelector("[value = Continue]")).click();
@@ -119,6 +130,7 @@ public class SignUpTest {
     public void signUpFailureWithWrongStructureOfEmail() {
         System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
         WebDriver driver = new ChromeDriver();
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         driver.get("https://sharelane.com/cgi-bin/register.py");
         driver.findElement(By.name("zip_code")).sendKeys("11111");
         driver.findElement(By.cssSelector("[value = Continue]")).click();
@@ -139,6 +151,7 @@ public class SignUpTest {
     public void signUpFailureWithNoFullStructureOfEmail() {
         System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
         WebDriver driver = new ChromeDriver();
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         driver.get("https://sharelane.com/cgi-bin/register.py");
         driver.findElement(By.name("zip_code")).sendKeys("11111");
         driver.findElement(By.cssSelector("[value = Continue]")).click();
@@ -159,6 +172,7 @@ public class SignUpTest {
     public void signUpFailureWithNotEqualPasswordFields() {
         System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
         WebDriver driver = new ChromeDriver();
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         driver.get("https://sharelane.com/cgi-bin/register.py");
         driver.findElement(By.name("zip_code")).sendKeys("11111");
         driver.findElement(By.cssSelector("[value = Continue]")).click();
@@ -204,13 +218,55 @@ public class SignUpTest {
         driver.findElement(By.name("password2")).sendKeys("1111");
         driver.findElement(By.cssSelector("[value = Register]")).click();
         String email = driver.findElement(By.xpath("//b[contains(text(),'@')]")).getText();
-//        String userPassword = driver.findElement(By.xpath("//td[contains(text(),'Password')]/following-sibling::")).toString();
         driver.findElement(By.xpath("//a[contains(text(),'here')]")).click();
         driver.findElement(By.cssSelector("[name = email]")).sendKeys(email);
         driver.findElement(By.cssSelector("[name = password]")).sendKeys("1111");
         driver.findElement(By.cssSelector("[value = Login]")).click();
        boolean isLoggedIn = driver.findElement(By.xpath("//a[contains(text(),'Logout')]")).isDisplayed();
         assertTrue(isLoggedIn, "Log in has failed");
+        driver.quit();
+    }
+
+    @Test
+    public void logInShouldFailWithUnregisteredEmail() {
+        System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
+        WebDriver driver = new ChromeDriver();
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        driver.get("https://www.sharelane.com/cgi-bin/main.py");
+        driver.findElement(By.cssSelector("[name = email]")).sendKeys("wrong@mail.ru");
+        driver.findElement(By.cssSelector("[name = password]")).sendKeys("1111");
+        driver.findElement(By.cssSelector("[value = Login]")).click();
+        String errorForLogInFailure = driver.findElement(By.cssSelector("[class= error_message]")).getText();
+        Assert.assertEquals(errorForLogInFailure,
+                "Oops, error. Email and/or password don't match our records",
+                "test for Log In with wrong email has failed");
+        driver.quit();
+    }
+
+    @Test
+    public void canNotAddBookIfNotLoggedIn() {
+        System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
+        WebDriver driver = new ChromeDriver();
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        driver.get("https://www.sharelane.com/cgi-bin/show_book.py?book_id=10");
+        driver.findElement(By.xpath("//a[contains(@href, 'add_to_cart')]")).click();
+        String errorNotLoggedUser1 = driver.findElement(By.cssSelector("[class= error_message]")).getText();
+        Assert.assertEquals(errorNotLoggedUser1,
+                "Oops, error. You must log in",
+                "it is possible to add book when not logged in");
+        driver.quit();
+    }
+
+    @Test
+    public void canNotGoToCartPageIfNotLoggedIn() {
+        System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
+        WebDriver driver = new ChromeDriver();
+        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        driver.get("https://www.sharelane.com/cgi-bin/shopping_cart.py");
+        String errorNotLoggedUser1 = driver.findElement(By.cssSelector("[class= error_message]")).getText();
+        Assert.assertEquals(errorNotLoggedUser1,
+                "Oops, error. You must log in",
+                "It is  possible to go to cart when not logged in");
         driver.quit();
     }
 
